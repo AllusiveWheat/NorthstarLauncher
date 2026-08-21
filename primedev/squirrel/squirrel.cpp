@@ -351,7 +351,7 @@ bool __fastcall SQCompiler_ResolveLocalOrConstantHook(void* pFunctionState, SQOb
 	pValue->_Type = OT_INTEGER;
 	pValue->structNumber = 0;
 	pValue->_VAL.as64Integer = 0;
-	constexpr std::uint32_t typeHashMagic  = 0x9E3779B9u - 0x61C88647u;
+	constexpr std::uint32_t typeHashMagic = 0x9E3779B9u - 0x61C88647u;
 	constexpr std::uint32_t typeHash = typeHashMagic * static_cast<std::uint32_t>(OT_INTEGER);
 	constexpr std::size_t typeIndex = (typeHash / 0xF499u) & 0x3FFFu;
 	SQSharedState* pSharedState = pIfDirectiveCompiler->pSQVM->sharedState;
