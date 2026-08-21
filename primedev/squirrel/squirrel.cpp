@@ -343,7 +343,7 @@ bool __fastcall SQCompiler_ResolveLocalOrConstantHook(void* pFunctionState, SQOb
 {
 	if (SQCompiler_ResolveLocalOrConstant<context>(pFunctionState, pIdentifier, pValue, pType))
 		return true;
-
+	// if we're not in a preprocessor directive, we don't want to resolve the identifier as a constant
 	if (!pIfDirectiveCompiler || pIfDirectiveCompiler->preprocessorDepth <= 0)
 		return false;
 
@@ -351,7 +351,8 @@ bool __fastcall SQCompiler_ResolveLocalOrConstantHook(void* pFunctionState, SQOb
 	pValue->_Type = OT_INTEGER;
 	pValue->structNumber = 0;
 	pValue->_VAL.as64Integer = 0;
-	constexpr std::uint32_t typeHash = 0x9E3779B9u - 0x61C88647u * static_cast<std::uint32_t>(OT_INTEGER);
+	constexpr std::uint32_t typeHashMagic  = 0x9E3779B9u - 0x61C88647u;
+	constexpr std::uint32_t typeHash = typeHashMagic * static_cast<std::uint32_t>(OT_INTEGER);
 	constexpr std::size_t typeIndex = (typeHash / 0xF499u) & 0x3FFFu;
 	SQSharedState* pSharedState = pIfDirectiveCompiler->pSQVM->sharedState;
 	*pType = reinterpret_cast<std::uintptr_t>(&pSharedState->compilerTypeDescriptors[typeIndex]);
